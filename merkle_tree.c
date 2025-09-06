@@ -34,7 +34,6 @@ void build_merkle_tree(char **transactions, size_t num_transactions, MerkleTree 
             if (2 * i + 1 < level_size) {
                 snprintf(combined, sizeof(combined), "%s%s", current_level[2 * i], current_level[2 * i + 1]);
             } else {
-                // Duplicate the last hash if odd number
                 snprintf(combined, sizeof(combined), "%s%s", current_level[2 * i], current_level[2 * i]);
             }
 
@@ -57,8 +56,8 @@ void build_merkle_tree(char **transactions, size_t num_transactions, MerkleTree 
         level_size = next_level_size;
     }
 
-    mt->root_hash = current_level[0];
-    free(current_level);  // Free pointer array, not the hash
+    mt->root_hash = strdup(current_level[0]);
+    free(current_level);
 }
 
 void free_merkle_tree(MerkleTree *mt) {
@@ -66,5 +65,5 @@ void free_merkle_tree(MerkleTree *mt) {
         free(mt->hashes[i]);
     }
     free(mt->hashes);
-    free(mt->root_hash);  // Free root hash created in build_merkle_tree
+    free(mt->root_hash);
 }
